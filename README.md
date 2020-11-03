@@ -23,7 +23,7 @@ EZ Modmail is an open-source Discord modmail bot designed for individual servers
 ###### *The bot must have PRESENCE INTENT and SERVER MEMBERS INTENT enabled, or else the script will error. It should also be given administrator permissions in the OATH2 category (BOT\BOT PERMISSIONS)
 Getting Token:
 ![exampleImage0](https://cdn.discordapp.com/attachments/764224430649376769/773306714418053190/unknown.png)
-Setting Priviledged Gateway Intents:
+Setting Privileged Gateway Intents:
 ![exampleImage1](https://cdn.discordapp.com/attachments/764224430649376769/773305848969560094/unknown.png)
 ### Setup
 1. Download the files (if you are hosting on a VPS or some other type of server, upload them to that)
