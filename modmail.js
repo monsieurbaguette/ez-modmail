@@ -7,6 +7,7 @@ client.once('ready', () => {
      console.log('Ready!');
     
 }); 
+let rList = {}
  var reason;
  var ticketName;
 client.on('message', message => { 
@@ -18,8 +19,9 @@ const argCmd = message.content.slice(prefix.length).trim().split(' ');
 const cmd = argCmd.shift().toLowerCase();
 const args = message.content.slice(prefix.length+cmd.length).trim().split('/ +/')
 if (message.channel.type==='dm') {
+    reason = rList[message.author.id];
     try{
-    
+
     var ticketNamerep1 = message.author.tag.replace(/#/g, "-");
     ticketName = ticketNamerep1.replace(/ /g, "-").toLowerCase();
 var userID = message.author.id;  
@@ -32,13 +34,16 @@ logMailCEmbed.setAuthor(`${serverName} Support`,thumb)
 logMailCEmbed.setTimestamp()
 logMailCEmbed.setTitle("Ticket Created!")
 logMailCEmbed.setThumbnail(thumb)
-logMailCEmbed.setDescription(`Ticket created by ${message.author}.`)
+logMailCEmbed.setDescription(`Ticket created by ${message.author.tag}.`)
 logMailCEmbed.setFooter(`Ticket: ${ticketName} | Subject: ${message.content}`)
+
     if ((!client.guilds.cache.get(modmailServerId).channels.cache.some(channel => channel.name.split('-').pop() === userID))) {
-reason=message.content;
+rList[message.author.id]=message.content;
+
+
     var channel = client.guilds.cache.get(modmailServerId).channels.create(`${ticketName}-${userID}`, {parent : ticketCategoryID});
 channel.then(c => c.setTopic(reason)).then(c => c.send(logMailCEmbed));
-
+reason = rList[message.author.id];
   const lc = client.channels.fetch(modmailLogChannelId).then(l => {l.send(logMailCEmbed)});
   
     const createMailEmbed = new Discord.MessageEmbed();
@@ -51,7 +56,9 @@ channel.then(c => c.setTopic(reason)).then(c => c.send(logMailCEmbed));
     createMailEmbed.setFooter(`Ticket: ${ticketName} | Subject: ${reason}`)
 
 message.author.send(createMailEmbed);
-}}  
+}
+
+}  
 catch(err){
 message.author.send(':x:Too many tickets are open at the moment; please wait a bit and then try again. If you')
 
