@@ -60,7 +60,7 @@ message.author.send(createMailEmbed);
 
 }  
 catch(err){
-message.author.send(':x:Too many tickets are open at the moment; please wait a bit and then try again. If you')
+message.author.send(':x:Too many tickets are open at the moment; please wait a bit and then try again. If you were not creating a ticket, please DM a high ranking staff member with a screenshot of this message.')
 
 message.react('❌');
 console.log(err);
