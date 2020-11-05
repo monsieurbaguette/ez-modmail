@@ -40,6 +40,7 @@ logMailCEmbed.setTimestamp()
 logMailCEmbed.setTitle("Ticket Created!")
 logMailCEmbed.setThumbnail(thumb)
 logMailCEmbed.setDescription(`Ticket created by ${message.author.tag}.`)
+if (message.attachments.size>0){logMailCEmbed.setImage(message.attachments.first().url)}
 logMailCEmbed.setFooter(`Ticket: ${ticketName} | Subject: ${message.content}`)
 
     if ((!client.guilds.cache.get(modmailServerId).channels.cache.some(channel => channel.name.split('-').pop() === userID))) {
@@ -82,6 +83,8 @@ return;
     inMailEmbed.setTitle("Incoming Message!")
     inMailEmbed.setThumbnail(thumb)
     inMailEmbed.setDescription(message.content)
+    if (message.attachments.size>0){inMailEmbed.setImage(message.attachments.first().url)}
+    
     inMailEmbed.setFooter(`Ticket: ${ticketName} | Subject: ${reason}`)
     const ls = client.channels.fetch(modmailLogChannelId).then(l => {l.send(inMailEmbed)});
    
@@ -92,7 +95,7 @@ console.log(!(client.guilds.cache.get(modmailServerId).channels.cache.some(chann
 }
 
 if (message.channel.parentID === ticketCategoryID) {
-    if (cmd === "reply" || cmd === "respond") {
+    if (cmd === "reply" || cmd === "respond" || cmd==='r') {
 var UID=message.channel.name.split("-").pop();
 var user = client.users.cache.get(`${UID}`);
 reason=rList[userID];
@@ -103,6 +106,7 @@ const outMailEmbed = new Discord.MessageEmbed();
     outMailEmbed.setTitle("Reply from Support")
     outMailEmbed.setThumbnail(thumb)
     outMailEmbed.setDescription(args)
+    if (message.attachments.size>0){outMailEmbed.setImage(message.attachments.first().url)}
     outMailEmbed.setFooter(`Ticket: ${(user.tag.replace(/#/g,'-')).replace(/ /g,'-')} | Subject: ${reason}`)
     const lso = client.channels.fetch(modmailLogChannelId).then(l => {l.send(outMailEmbed)});
 
@@ -112,7 +116,7 @@ try{user.send(outMailEmbed);}
 catch(err){console.log("error")}
 message.react('📧');
     }
-if (cmd==='areply' || cmd === 'arespond') {
+if (cmd==='areply' || cmd === 'arespond' || cmd === 'ar') {
     var UID=message.channel.name.split("-").pop();
     var user = client.users.cache.get(`${UID}`);
     reason=rList[userID];
@@ -123,6 +127,7 @@ if (cmd==='areply' || cmd === 'arespond') {
         outMailEmbed.setTitle("Reply from Support")
         outMailEmbed.setThumbnail(thumb)
         outMailEmbed.setDescription(args)
+      if (message.attachments.size>0){outMailEmbed.setImage(message.attachments.first().url)}
         outMailEmbed.setFooter(`Ticket:${(user.tag.replace(/#/g,'-')).replace(/ /g,'-')} | Subject: ${reason}`)
         const outMailEmbedL = new Discord.MessageEmbed();
         outMailEmbedL.setColor('#F9A808')
@@ -131,6 +136,7 @@ if (cmd==='areply' || cmd === 'arespond') {
         outMailEmbedL.setTitle("Reply from Support")
         outMailEmbedL.setThumbnail(thumb)
         outMailEmbedL.setDescription(args)
+      if (message.attachments.size>0){outMailEmbedL.setImage(message.attachments.first().url)}
         outMailEmbedL.setFooter(`Ticket: ${(user.tag.replace(/#/g,'-')).replace(/ /g,'-')} | Subject: ${reason}`)
         const lsao = client.channels.fetch(modmailLogChannelId).then(l => {l.send(outMailEmbedL)});
     console.log(user);
@@ -140,7 +146,7 @@ if (cmd==='areply' || cmd === 'arespond') {
     message.react('📧');
 
 }
-if (cmd==='close') {
+if (cmd==='close' || cmd==='c') {
     reason=rList[userID];
     var UID=message.channel.name.split("-").pop();
     var user = client.users.cache.get(`${UID}`);
