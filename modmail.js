@@ -5,26 +5,34 @@ const { token,thumb,modmailServerId,ticketCategoryID,modmailLogChannelId,mainSer
 var prefix="!mm ";
 client.once('ready', () => {
      console.log('Ready!');
+   /*  client.user.setPresence({game: {name: "DM for Support!", type: "STREAMING", url: "https://www.twitch.tv/minecraft"}, status: 'online'}); */
+     //WIP feature, working on customizable presences (premium version?)
+        
     
 }); 
+
 let rList = {}
+var userID;
  var reason;
  var ticketName;
 client.on('message', message => { 
     if (message.author.bot || !(message.channel.parentID === ticketCategoryID || message.channel.type === 'dm')) return;
 const serverName = client.guilds.cache.get(mainServerId).name;
 console.log(serverName);
-   
+
 const argCmd = message.content.slice(prefix.length).trim().split(' ');
 const cmd = argCmd.shift().toLowerCase();
 const args = message.content.slice(prefix.length+cmd.length).trim().split('/ +/')
+try{
+    userID=message.channel.name.split('-').pop();
+ }
+catch(err){userID = message.author.id; }
 if (message.channel.type==='dm') {
     reason = rList[message.author.id];
     try{
 
     var ticketNamerep1 = message.author.tag.replace(/#/g, "-");
     ticketName = ticketNamerep1.replace(/ /g, "-").toLowerCase();
-var userID = message.author.id;  
 
 console.log(userID);
     console.log(`${ticketName}-${userID}`/*.split("-").pop()*/);
@@ -66,6 +74,7 @@ message.react('❌');
 console.log(err);
 return;
     }
+    reason=rList[userID];
     message.react('✅'); 
     const sc = client.guilds.cache.get(modmailServerId).channels.cache.find(channel => channel.name.split("-").pop() === userID);
     const inMailEmbed = new Discord.MessageEmbed();
@@ -89,7 +98,7 @@ if (message.channel.parentID === ticketCategoryID) {
     if (cmd === "reply" || cmd === "respond") {
 var UID=message.channel.name.split("-").pop();
 var user = client.users.cache.get(`${UID}`);
-
+reason=rList[userID];
 const outMailEmbed = new Discord.MessageEmbed();
     outMailEmbed.setColor('#F9A808')
     outMailEmbed.setAuthor(message.author.tag,message.author.avatarURL())
@@ -97,7 +106,7 @@ const outMailEmbed = new Discord.MessageEmbed();
     outMailEmbed.setTitle("Reply from Support")
     outMailEmbed.setThumbnail(thumb)
     outMailEmbed.setDescription(args)
-    outMailEmbed.setFooter(`Ticket: ${ticketName} | Subject: ${reason}`)
+    outMailEmbed.setFooter(`Ticket: ${(user.tag.replace(/#/g,'-')).replace(/ /g,'-')} | Subject: ${reason}`)
     const lso = client.channels.fetch(modmailLogChannelId).then(l => {l.send(outMailEmbed)});
 
 console.log(user);
@@ -109,7 +118,7 @@ message.react('📧');
 if (cmd==='areply' || cmd === 'arespond') {
     var UID=message.channel.name.split("-").pop();
     var user = client.users.cache.get(`${UID}`);
-    
+    reason=rList[userID];
     const outMailEmbed = new Discord.MessageEmbed();
         outMailEmbed.setColor('#F9A808')
         outMailEmbed.setAuthor('Anonymous Support Member', thumb)
@@ -117,7 +126,7 @@ if (cmd==='areply' || cmd === 'arespond') {
         outMailEmbed.setTitle("Reply from Support")
         outMailEmbed.setThumbnail(thumb)
         outMailEmbed.setDescription(args)
-        outMailEmbed.setFooter(`Ticket:${ticketName} | Subject: ${reason}`)
+        outMailEmbed.setFooter(`Ticket:${(user.tag.replace(/#/g,'-')).replace(/ /g,'-')} | Subject: ${reason}`)
         const outMailEmbedL = new Discord.MessageEmbed();
         outMailEmbedL.setColor('#F9A808')
         outMailEmbedL.setAuthor(`[ANONYMOUS REPLY] ${message.author.tag}`,message.author.avatarURL())
@@ -125,7 +134,7 @@ if (cmd==='areply' || cmd === 'arespond') {
         outMailEmbedL.setTitle("Reply from Support")
         outMailEmbedL.setThumbnail(thumb)
         outMailEmbedL.setDescription(args)
-        outMailEmbedL.setFooter(`Ticket: ${ticketName} | Subject: ${reason}`)
+        outMailEmbedL.setFooter(`Ticket: ${(user.tag.replace(/#/g,'-')).replace(/ /g,'-')} | Subject: ${reason}`)
         const lsao = client.channels.fetch(modmailLogChannelId).then(l => {l.send(outMailEmbedL)});
     console.log(user);
     console.log(UID);
@@ -135,7 +144,9 @@ if (cmd==='areply' || cmd === 'arespond') {
 
 }
 if (cmd==='close') {
-
+    reason=rList[userID];
+    var UID=message.channel.name.split("-").pop();
+    var user = client.users.cache.get(`${UID}`);
     const closeMailEmbed = new Discord.MessageEmbed();
     closeMailEmbed.setColor('#f70505')
     closeMailEmbed.setAuthor(`🔒Locked`, thumb)
@@ -143,9 +154,9 @@ if (cmd==='close') {
     closeMailEmbed.setTitle("Ticket Closed")
     closeMailEmbed.setThumbnail(thumb)
     closeMailEmbed.setDescription("This ticket has been closed.")
-    closeMailEmbed.setFooter(`Ticket: ${ticketName} | Subject: ${reason}`)
-    var UID=message.channel.name.split("-").pop();
-    var user = client.users.cache.get(`${UID}`);
+    closeMailEmbed.setFooter(`Ticket: ${(user.tag.replace(/#/g,'-')).replace(/ /g,'-')} | Subject: ${reason}`)
+  
+    delete rList[UID];
      user.send(closeMailEmbed);
      message.channel.delete();
    
