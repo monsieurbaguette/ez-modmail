@@ -2,13 +2,10 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const { token,thumb,modmailServerId,ticketCategoryID,modmailLogChannelId,mainServerId } = require('./config.json');
 
-var prefix="!mm ";
+var prefix="!";
 client.once('ready', () => {
      console.log('Ready!');
-   /*  client.user.setPresence({game: {name: "DM for Support!", type: "STREAMING", url: "https://www.twitch.tv/minecraft"}, status: 'online'}); */
-     //WIP feature, working on customizable presences (premium version?)
-        
-    
+   client.user.setStatus('idle');client.user.setPresence({activity: {name: 'DM for Support!',type: 'STREAMING',url: 'https://www.twitch.tv/discord/'}}) 
 }); 
 
 let rList = {}
